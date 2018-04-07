@@ -6,13 +6,13 @@ Library  ../Libs/arduino_serial.py
 
 *** Test Cases ***
 Run Arduino Function
-	${response} =  AssertMotor  1
+	${response} =  MotorStop
 	Log to console  ${response}
-	${response} =  AssertMotor  2
+	${response} =  MotorForward
 	Log to console  ${response}
-	${response} =  AssertMotor  1
+	${response} =  MotorStop
 	Log to console  ${response}
-	${response} =  AssertMotor  3
+	${response} =  MotorReverse
 	Log to console  ${response}
-	${response} =  AssertMotor  1
+	${response} =  MotorStop
 	Log to console  ${response}
