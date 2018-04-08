@@ -5,8 +5,8 @@ from serial.tools import list_ports
 movementDuration = 0.1
 
 MOVEMENT_STOP = "1"
-MOVEMENT_INSERT = "3"
-MOVEMENT_REMOVE = "2"
+MOVEMENT_INSERT = "2"
+MOVEMENT_REMOVE = "3"
 
 def FindBoard():
     # Arduino VID + PID (from device manager -> details -> device instance path)
