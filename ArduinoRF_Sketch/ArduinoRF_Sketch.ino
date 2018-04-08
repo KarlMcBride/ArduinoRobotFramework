@@ -47,12 +47,12 @@ void updateMotor(int inputVal)
   else if (inputVal == 2)
   {
     SetMotorPinStates(HIGH, LOW);
-    Serial.println("Forward"); 
+    Serial.println("Forward");
   }
   else if (inputVal == 3)
   {
     SetMotorPinStates(LOW, HIGH);
-    Serial.println("Reverse");   
+    Serial.println("Reverse");
   }
 }
 

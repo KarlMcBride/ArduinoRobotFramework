@@ -5,14 +5,16 @@ Library  Process
 Library  ../Libs/arduino_serial.py
 
 *** Test Cases ***
-Run Arduino Function
-	${response} =  MotorStop
-	Log to console  ${response}
-	${response} =  MotorForward
-	Log to console  ${response}
-	${response} =  MotorStop
-	Log to console  ${response}
-	${response} =  MotorReverse
-	Log to console  ${response}
-	${response} =  MotorStop
-	Log to console  ${response}
+Impulse Loop
+    : FOR  ${delay}  IN RANGE  0.2  1.0  0.2
+    \    Log  ${delay}
+    \    ${log} =  BriefImpulse  ${delay}
+    \    Log  ${log}
+    \    Sleep  1
+
+Insert, Wait & Remove
+    ${log} =  InsertCard
+    Log  ${log}
+    Sleep  2
+    ${log} =  RemoveCard
+    Log  ${log}
