@@ -2,7 +2,7 @@
 #Library  Collections
 #Library  OperatingSystem
 Library  Process
-Library  ../Libs/arduino_serial.py
+Library  arduino_serial.py
 
 *** Test Cases ***
 Impulse Loop
