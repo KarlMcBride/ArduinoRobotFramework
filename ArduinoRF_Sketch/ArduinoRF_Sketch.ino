@@ -20,11 +20,17 @@ const String MSG_REMOVED = "Card Removed";
 
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+const int rs = 2, en = 3, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
+// Pin connected to LCD pin 3. Allows control of LCD contrast
+const int lcd_contrast_pwm_pin = 9;
+ // 0-100. 100 give max for 1602A, 0 gives max for 1602C
+const int lcd_contrast = 50;
+
 // Pin connected to LCD pin 15. Allows control of backlight brightness
-const int lcd_backlight_pwm = 9;
+const int lcd_backlight_pwm_pin = 10;
+const int lcd_backlight = 100;
 
 // Stores value of previous millis() call
 long previousMillis = 0;
@@ -39,8 +45,11 @@ void setup()
   pinMode(MOTOR_PIN_POSITIVE, OUTPUT);
   pinMode(MOTOR_PIN_NEGATIVE, OUTPUT);
 
-  pinMode(lcd_backlight_pwm, OUTPUT);
-  analogWrite(lcd_backlight_pwm, 100);
+  pinMode(lcd_contrast_pwm_pin, OUTPUT);
+  analogWrite(lcd_contrast_pwm_pin, lcd_contrast);
+
+  pinMode(lcd_backlight_pwm_pin, OUTPUT);
+  analogWrite(lcd_backlight_pwm_pin, lcd_backlight);
 
   // Set all pins to LOW
   SetMotorPinStates(LOW, LOW);
