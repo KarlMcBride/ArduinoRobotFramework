@@ -129,34 +129,29 @@ void loop()
         else
         {
             fadeLedEnabled = false;
+            fade_rgb_led(false, false, false);
         }
     }
 
-    fade_led(fadeLedEnabled);
+    if (fadeLedEnabled)
+    {
+        fade_rgb_led(true, true, true);
+    }
     delay(10);
 }
 
-void fade_led(bool _keepRunning)
+void fade_rgb_led(bool _fadeRed, bool _fadeGreen, bool _fadeBlue)
 {
-    if (_keepRunning)
-    {
-        analogWrite(LED_PIN_R, currentLedBrightness);
-        analogWrite(LED_PIN_G, currentLedBrightness);
-        analogWrite(LED_PIN_B, currentLedBrightness);
+    // change the brightness for next time through the loop:
+    currentLedBrightness = currentLedBrightness + fadeAmount;
 
-        // change the brightness for next time through the loop:
-        currentLedBrightness = currentLedBrightness + fadeAmount;
-
-        // Reverse the direction of the fading at the ends of the fade:
-        if (currentLedBrightness <= 0 || currentLedBrightness >= 254)
-        {
-            fadeAmount = -fadeAmount;
-        }
-    }
-    else
+    // Reverse the direction of the fading at the ends of the fade:
+    if (currentLedBrightness <= 0 || currentLedBrightness >= 254)
     {
-        analogWrite(LED_PIN_R, 0);
-        analogWrite(LED_PIN_G, 0);
-        analogWrite(LED_PIN_B, 0);
+        fadeAmount = -fadeAmount;
     }
+
+    analogWrite(LED_PIN_R, (_fadeRed   ? currentLedBrightness : 0));
+    analogWrite(LED_PIN_G, (_fadeGreen ? currentLedBrightness : 0));
+    analogWrite(LED_PIN_B, (_fadeBlue  ? currentLedBrightness : 0));
 }
