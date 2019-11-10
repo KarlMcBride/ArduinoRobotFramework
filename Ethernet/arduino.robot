@@ -13,76 +13,43 @@ Verify Response Dictionary
     ${state} =  Get From Dictionary  ${responseDicts}  valid
     Should Be True  ${state}  Arduino response was not valid.
 
-Set Colour - White
-    ${responseDict} =  Enable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Blue
+Enable RGB Fade
+    ${responseDict} =  RGB Fade
     Verify Response Dictionary  ${responseDict}
 
-Set Colour - Red
-    ${responseDict} =  Enable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Blue
-    Verify Response Dictionary  ${responseDict}
-
-Set Colour - Yellow
-    ${responseDict} =  Enable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Blue
-    Verify Response Dictionary  ${responseDict}
-
-Set Colour - Green
-    ${responseDict} =  Disable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Blue
-    Verify Response Dictionary  ${responseDict}
-
-Set Colour - Blue
-    ${responseDict} =  Disable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Blue
-    Verify Response Dictionary  ${responseDict}
-
-Set Colour - Pink
-    ${responseDict} =  Enable Red
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Disable Green
-    Verify Response Dictionary  ${responseDict}
-    ${responseDict} =  Enable Blue
-    Verify Response Dictionary  ${responseDict}
-
-Toggle RGB Fade On
-    ${responseDict} =  Enable RGB Fade
+Enable RGB Static
+    ${responseDict} =  RGB Static
     Verify Response Dictionary  ${responseDict}
 
 Toggle LED Off
-    ${responseDict} =  Turn RGB Off
+    ${responseDict} =  RGB Off
     Verify Response Dictionary  ${responseDict}
+
+Set RGB Scalars
+    [Arguments]  ${red}  ${green}  ${blue}
+    ${responseDict} =  Configure Rgb Scalars  ${red}  ${green}  ${blue}
+    Verify Response Dictionary  ${responseDict}
+    Sleep  3
 
 
 *** Test Cases ***
-Led Toggle
-    Toggle RGB Fade On
-    Set Colour - White
-    Sleep  2.55
-    Set Colour - Red
-    Sleep  2.55
-    Set Colour - Yellow
-    Sleep  2.55
-    Set Colour - Green
-    Sleep  2.55
-    Set Colour - Blue
-    Sleep  2.55
-    Set Colour - Pink
-    Sleep  2.55
-    Toggle LED Off
+
+RGB Fade Test
+    Enable RGB Fade
+    Set RGB Scalars  255  0    0    # Red
+    Set RGB Scalars  255  255  0    # Yellow
+    Set RGB Scalars  0    255  0    # Green
+    Set RGB Scalars  0    255  255  # Cyan
+    Set RGB Scalars  0    0    255  # Blue
+    Set RGB Scalars  255  0    255  # Pink
+    Set RGB Scalars  255  255  255  # White
+
+RGB Static Test
+    Enable RGB Static
+    Set RGB Scalars  255  0    0    # Red
+    Set RGB Scalars  255  255  0    # Yellow
+    Set RGB Scalars  0    255  0    # Green
+    Set RGB Scalars  0    255  255  # Cyan
+    Set RGB Scalars  0    0    255  # Blue
+    Set RGB Scalars  255  0    255  # Pink
+    Set RGB Scalars  255  255  255  # White

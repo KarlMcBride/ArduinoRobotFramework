@@ -1,16 +1,10 @@
 /*
     Based on the Ethernet UDPSendReceiveString example
     Modified to allow control of an LED via ethernet
- */
+*/
 
 #include <Ethernet.h>
 //#include <EthernetUdp.h>
-
-const int LED_PIN_R = 3;
-const int LED_PIN_G = 5;
-const int LED_PIN_B = 6;
-int currentLedBrightness = 0;
-int fadeAmount = 2;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -27,12 +21,22 @@ const int ACK_MESSAGE_MAX_SIZE = 100;
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
 
-bool fadeLedEnabled = false;
-bool fadeRedRGB = false;
-bool fadeGreenRGB = false;
-bool fadeBlueRGB = false;
+
+const int LED_PIN_R = 3;
+const int LED_PIN_G = 5;
+const int LED_PIN_B = 6;
+const int DEFAULT_FADE_AMOUNT = 2;
+int currentLedBrightness = 0;
+int fadeAmount = DEFAULT_FADE_AMOUNT;
+
+int redScalar = 0;
+int greenScalar = 0;
+int blueScalar = 0;
 
 const int RGB_SETUP_DELAY_MS = 500;
+
+enum RGB_MODE { RGB_OFF, RGB_FADE, RGB_STATIC };
+RGB_MODE rgbMode = RGB_OFF;
 
 void setup()
 {
@@ -125,51 +129,70 @@ void loop()
 
         if (0 == strcmp(packetBuffer, "RGB_FADE"))
         {
-            // Start fading RGB led. Reset brightness and ensure fadeAmount is positive.
+            // Start fading RGB led. Reset brightness and fadeAmount
             currentLedBrightness = 0;
-            fadeAmount = (fadeAmount < 0) ? -fadeAmount : fadeAmount;
-            fadeLedEnabled = true;
+            fadeAmount = DEFAULT_FADE_AMOUNT;
+            rgbMode = RGB_FADE;
         }
-        else if (0 == strcmp(packetBuffer, "RED_ON"))
+        else if (0 == strcmp(packetBuffer, "RGB_OFF"))
         {
-            fadeRedRGB = true;
+            analogWrite(LED_PIN_R, 0);
+            analogWrite(LED_PIN_G, 0);
+            analogWrite(LED_PIN_B, 0);
+            rgbMode = RGB_OFF;
         }
-        else if (0 == strcmp(packetBuffer, "RED_OFF"))
+        else if (0 == strcmp(packetBuffer, "RGB_STATIC"))
         {
-            fadeRedRGB = false;
+            analogWrite(LED_PIN_R, redScalar);
+            analogWrite(LED_PIN_G, greenScalar);
+            analogWrite(LED_PIN_B, blueScalar);
+            rgbMode = RGB_STATIC;
         }
-        else if (0 == strcmp(packetBuffer, "GREEN_ON"))
+        else if (NULL != strstr(packetBuffer, "RGB#"))
         {
-            fadeGreenRGB = true;
-        }
-        else if (0 == strcmp(packetBuffer, "GREEN_OFF"))
-        {
-            fadeGreenRGB = false;
-        }
-        else if (0 == strcmp(packetBuffer, "BLUE_ON"))
-        {
-            fadeBlueRGB = true;
-        }
-        else if (0 == strcmp(packetBuffer, "BLUE_OFF"))
-        {
-            fadeBlueRGB = false;
+            int tokensParsed = 0;
+            char *token = strtok(packetBuffer, ",");
+            char *array[3];
+
+            while (token != NULL)
+            {
+                array[tokensParsed++] = token;
+                token = strtok(NULL, ",");
+            }
+
+            redScalar = atoi(array[1]);
+            greenScalar = atoi(array[2]);
+            blueScalar = atoi(array[3]);
+
+            Serial.print("R: ");
+            Serial.println(redScalar);
+            Serial.print("G: ");
+            Serial.println(greenScalar);
+            Serial.print("B: ");
+            Serial.println(blueScalar);
+
+            if (rgbMode == RGB_STATIC)
+            {
+              analogWrite(LED_PIN_R, redScalar);
+              analogWrite(LED_PIN_G, greenScalar);
+              analogWrite(LED_PIN_B, blueScalar);                
+            }
         }
         else
         {
-            fadeLedEnabled = false;
-            fade_rgb_led(false, false, false);
+            Serial.println("Unknown instruction received:");
+            Serial.println(packetBuffer);
         }
     }
 
-    if (fadeLedEnabled)
+    if (rgbMode == RGB_FADE)
     {
-        //fade_rgb_led(true, true, true);
-        fade_rgb_led(fadeRedRGB, fadeGreenRGB, fadeBlueRGB);
+        fade_rgb_led();
     }
     delay(10);
 }
 
-void fade_rgb_led(bool _fadeRed, bool _fadeGreen, bool _fadeBlue)
+void fade_rgb_led()
 {
     // change the brightness for next time through the loop:
     currentLedBrightness = currentLedBrightness + fadeAmount;
@@ -180,7 +203,7 @@ void fade_rgb_led(bool _fadeRed, bool _fadeGreen, bool _fadeBlue)
         fadeAmount = -fadeAmount;
     }
 
-    analogWrite(LED_PIN_R, (_fadeRed   ? currentLedBrightness : 0));
-    analogWrite(LED_PIN_G, (_fadeGreen ? currentLedBrightness : 0));
-    analogWrite(LED_PIN_B, (_fadeBlue  ? currentLedBrightness : 0));
+    analogWrite(LED_PIN_R, ((redScalar   * currentLedBrightness) / 255));
+    analogWrite(LED_PIN_G, ((greenScalar * currentLedBrightness) / 255));
+    analogWrite(LED_PIN_B, ((blueScalar  * currentLedBrightness) / 255));
 }

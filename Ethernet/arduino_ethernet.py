@@ -7,14 +7,6 @@ import time
 
 UDP_IP = "192.168.1.20"
 UDP_PORT = 8888
-MESSAGE_RGB_FADE  = "RGB_FADE"
-MESSAGE_RED_ON    = "RED_ON"
-MESSAGE_RED_OFF   = "RED_OFF"
-MESSAGE_GREEN_ON  = "GREEN_ON"
-MESSAGE_GREEN_OFF = "GREEN_OFF"
-MESSAGE_BLUE_ON   = "BLUE_ON"
-MESSAGE_BLUE_OFF  = "BLUE_OFF"
-MESSAGE_RGB_OFF   = "RGB_OFF"
 
 
 # Send message to Arduino and get response
@@ -43,33 +35,21 @@ def SendAndVerifyResponse(_message):
     responseDictionary = {"message":responseMessage, "valid":responseValid}
     return responseDictionary
 
+def RgbFade():
+    return SendAndVerifyResponse("RGB_FADE")
 
-def EnableRgbFade():
-    return SendAndVerifyResponse(MESSAGE_RGB_FADE)
+def RgbOff():
+    return SendAndVerifyResponse("RGB_OFF")
 
-def TurnRgbOff():
-    return SendAndVerifyResponse(MESSAGE_RGB_OFF)
+def RgbStatic():
+    return SendAndVerifyResponse("RGB_STATIC")
 
-def DisableRed():
-    return SendAndVerifyResponse(MESSAGE_RED_OFF)
-
-def EnableRed():
-    return SendAndVerifyResponse(MESSAGE_RED_ON)
-
-def DisableGreen():
-    return SendAndVerifyResponse(MESSAGE_GREEN_OFF)
-
-def EnableGreen():
-    return SendAndVerifyResponse(MESSAGE_GREEN_ON)
-
-def DisableBlue():
-    return SendAndVerifyResponse(MESSAGE_BLUE_OFF)
-
-def EnableBlue():
-    return SendAndVerifyResponse(MESSAGE_BLUE_ON)
+def ConfigureRgbScalars(_red, _green, _blue):
+    message = "RGB#," + str(_red) + "," + str(_green) + "," + str(_blue)
+    return SendAndVerifyResponse(message)
 
 
 if __name__ == "__main__":
-    print(EnableRgbFade())
+    print(RgbFade())
     time.sleep(5)
-    print(TurnRgbOff())
+    print(RgbOff())
