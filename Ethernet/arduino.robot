@@ -26,5 +26,6 @@ Toggle LED Off
 *** Test Cases ***
 Led Toggle
     Toggle LED On
-    Sleep  5
+    Sleep  2.55
     Toggle LED Off
+    Sleep  1
