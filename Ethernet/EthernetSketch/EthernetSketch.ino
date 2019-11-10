@@ -28,6 +28,9 @@ const int ACK_MESSAGE_MAX_SIZE = 100;
 EthernetUDP Udp;
 
 bool fadeLedEnabled = false;
+bool fadeRedRGB = false;
+bool fadeGreenRGB = false;
+bool fadeBlueRGB = false;
 
 const int RGB_SETUP_DELAY_MS = 500;
 
@@ -122,9 +125,34 @@ void loop()
 
         if (0 == strcmp(packetBuffer, "RGB_FADE"))
         {
+            // Start fading RGB led. Reset brightness and ensure fadeAmount is positive.
             currentLedBrightness = 0;
             fadeAmount = (fadeAmount < 0) ? -fadeAmount : fadeAmount;
             fadeLedEnabled = true;
+        }
+        else if (0 == strcmp(packetBuffer, "RED_ON"))
+        {
+            fadeRedRGB = true;
+        }
+        else if (0 == strcmp(packetBuffer, "RED_OFF"))
+        {
+            fadeRedRGB = false;
+        }
+        else if (0 == strcmp(packetBuffer, "GREEN_ON"))
+        {
+            fadeGreenRGB = true;
+        }
+        else if (0 == strcmp(packetBuffer, "GREEN_OFF"))
+        {
+            fadeGreenRGB = false;
+        }
+        else if (0 == strcmp(packetBuffer, "BLUE_ON"))
+        {
+            fadeBlueRGB = true;
+        }
+        else if (0 == strcmp(packetBuffer, "BLUE_OFF"))
+        {
+            fadeBlueRGB = false;
         }
         else
         {
@@ -135,7 +163,8 @@ void loop()
 
     if (fadeLedEnabled)
     {
-        fade_rgb_led(true, true, true);
+        //fade_rgb_led(true, true, true);
+        fade_rgb_led(fadeRedRGB, fadeGreenRGB, fadeBlueRGB);
     }
     delay(10);
 }

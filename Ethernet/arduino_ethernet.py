@@ -8,7 +8,14 @@ import time
 UDP_IP = "192.168.1.20"
 UDP_PORT = 8888
 MESSAGE_RGB_FADE  = "RGB_FADE"
-MESSAGE_RGB_OFF = "RGB_OFF"
+MESSAGE_RED_ON    = "RED_ON"
+MESSAGE_RED_OFF   = "RED_OFF"
+MESSAGE_GREEN_ON  = "GREEN_ON"
+MESSAGE_GREEN_OFF = "GREEN_OFF"
+MESSAGE_BLUE_ON   = "BLUE_ON"
+MESSAGE_BLUE_OFF  = "BLUE_OFF"
+MESSAGE_RGB_OFF   = "RGB_OFF"
+
 
 # Send message to Arduino and get response
 def ConnectAndSendUdpMessage(_message):
@@ -17,6 +24,7 @@ def ConnectAndSendUdpMessage(_message):
     receivedData = str(sock.recv(1024))
     sock.close()
     return receivedData
+
 
 # Validates response by expecting expectedComponent inside response
 def ValidateUdpResponse(_response, _expectedComponent):
@@ -27,6 +35,7 @@ def ValidateUdpResponse(_response, _expectedComponent):
         respStatus = True
     return respStatus
 
+
 # Sends message via UDP and returns response message and valid flag
 def SendAndVerifyResponse(_message):
     responseMessage = ConnectAndSendUdpMessage(_message)
@@ -34,14 +43,33 @@ def SendAndVerifyResponse(_message):
     responseDictionary = {"message":responseMessage, "valid":responseValid}
     return responseDictionary
 
-def TurnLedOn():
+
+def EnableRgbFade():
     return SendAndVerifyResponse(MESSAGE_RGB_FADE)
 
-def TurnLedOff():
+def TurnRgbOff():
     return SendAndVerifyResponse(MESSAGE_RGB_OFF)
+
+def DisableRed():
+    return SendAndVerifyResponse(MESSAGE_RED_OFF)
+
+def EnableRed():
+    return SendAndVerifyResponse(MESSAGE_RED_ON)
+
+def DisableGreen():
+    return SendAndVerifyResponse(MESSAGE_GREEN_OFF)
+
+def EnableGreen():
+    return SendAndVerifyResponse(MESSAGE_GREEN_ON)
+
+def DisableBlue():
+    return SendAndVerifyResponse(MESSAGE_BLUE_OFF)
+
+def EnableBlue():
+    return SendAndVerifyResponse(MESSAGE_BLUE_ON)
 
 
 if __name__ == "__main__":
-    print(TurnLedOn())
+    print(EnableRgbFade())
     time.sleep(5)
-    print(TurnLedOff())
+    print(TurnRgbOff())
