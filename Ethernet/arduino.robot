@@ -1,8 +1,9 @@
 *** Settings ***
 Library  Collections
-#Library  OperatingSystem
 Library  Process
 Library  arduino_ethernet.py
+
+Suite Teardown  Rgb Off
 
 
 *** Keywords ***
@@ -31,25 +32,30 @@ Set RGB Scalars
     Verify Response Dictionary  ${responseDict}
     Sleep  3
 
-
 *** Test Cases ***
 
 RGB Fade Test
-    Enable RGB Fade
-    Set RGB Scalars  255  0    0    # Red
-    Set RGB Scalars  255  255  0    # Yellow
-    Set RGB Scalars  0    255  0    # Green
-    Set RGB Scalars  0    255  255  # Cyan
-    Set RGB Scalars  0    0    255  # Blue
-    Set RGB Scalars  255  0    255  # Pink
-    Set RGB Scalars  255  255  255  # White
+    [Setup]  Enable RGB Fade
+    [Template]  Set RGB Scalars
+        100  0    0    # Red
+        100  10   0    # Orange
+        50   25   0    # Yellow
+        0    60   0    # Green
+        0    25   25   # Cyan
+        0    0    50   # Blue
+        50   0    50   # Pink
+        25  0     50   # Purple
+        25   25   25   # White
 
 RGB Static Test
-    Enable RGB Static
-    Set RGB Scalars  255  0    0    # Red
-    Set RGB Scalars  255  255  0    # Yellow
-    Set RGB Scalars  0    255  0    # Green
-    Set RGB Scalars  0    255  255  # Cyan
-    Set RGB Scalars  0    0    255  # Blue
-    Set RGB Scalars  255  0    255  # Pink
-    Set RGB Scalars  255  255  255  # White
+    [Setup]  Enable RGB Static
+    [Template]  Set RGB Scalars
+        100  0    0    # Red
+        100  10   0    # Orange
+        50   25   0    # Yellow
+        0    60   0    # Green
+        0    25   25   # Cyan
+        0    0    50   # Blue
+        50   0    50   # Pink
+        25  0     50   # Purple
+        25   25   25   # White
