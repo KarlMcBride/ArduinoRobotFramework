@@ -6,7 +6,9 @@
 #include <Ethernet.h>
 //#include <EthernetUdp.h>
 
-const int LED_PIN = 9; // the PWM pin the LED is attached to
+const int LED_PIN_R = 3;
+const int LED_PIN_G = 5;
+const int LED_PIN_B = 6;
 int currentLedBrightness = 0;
 int fadeAmount = 2;
 
@@ -27,12 +29,11 @@ EthernetUDP Udp;
 
 bool fadeLedEnabled = false;
 
+const int RGB_SETUP_DELAY_MS = 500;
+
 void setup()
 {
-    // declare pin 9 to be an output:
-    pinMode(LED_PIN, OUTPUT);
-
-    // start the Ethernet
+    // Start ethernet connection
     Ethernet.begin(mac, ip);
 
     // Open serial communications and wait for port to open:
@@ -58,6 +59,28 @@ void setup()
 
     // start UDP
     Udp.begin(localPort);
+
+    // Declare RGB pins
+    pinMode(LED_PIN_R, OUTPUT);
+    pinMode(LED_PIN_G, OUTPUT);
+    pinMode(LED_PIN_B, OUTPUT);
+
+    // Cycle RGB at startup
+    analogWrite(LED_PIN_R, 255);
+    delay(RGB_SETUP_DELAY_MS);
+    analogWrite(LED_PIN_R, 0);
+    analogWrite(LED_PIN_G, 255);
+    delay(RGB_SETUP_DELAY_MS);
+    analogWrite(LED_PIN_G, 0);
+    analogWrite(LED_PIN_B, 255);
+    delay(RGB_SETUP_DELAY_MS);
+    analogWrite(LED_PIN_R, 255);
+    analogWrite(LED_PIN_G, 255);
+    analogWrite(LED_PIN_B, 255);
+    delay(RGB_SETUP_DELAY_MS);
+    analogWrite(LED_PIN_R, 0);
+    analogWrite(LED_PIN_G, 0);
+    analogWrite(LED_PIN_B, 0);
 }
 
 void loop()
@@ -97,7 +120,7 @@ void loop()
         Udp.write(ackMessage);
         Udp.endPacket();
 
-        if (0 == strcmp(packetBuffer, "LED_ON"))
+        if (0 == strcmp(packetBuffer, "RGB_FADE"))
         {
             currentLedBrightness = 0;
             fadeAmount = (fadeAmount < 0) ? -fadeAmount : fadeAmount;
@@ -117,8 +140,9 @@ void fade_led(bool _keepRunning)
 {
     if (_keepRunning)
     {
-        // set the brightness of pin 9:
-        analogWrite(LED_PIN, currentLedBrightness);
+        analogWrite(LED_PIN_R, currentLedBrightness);
+        analogWrite(LED_PIN_G, currentLedBrightness);
+        analogWrite(LED_PIN_B, currentLedBrightness);
 
         // change the brightness for next time through the loop:
         currentLedBrightness = currentLedBrightness + fadeAmount;
@@ -131,6 +155,8 @@ void fade_led(bool _keepRunning)
     }
     else
     {
-        analogWrite(LED_PIN, 0);
+        analogWrite(LED_PIN_R, 0);
+        analogWrite(LED_PIN_G, 0);
+        analogWrite(LED_PIN_B, 0);
     }
 }

@@ -7,8 +7,8 @@ import time
 
 UDP_IP = "192.168.1.20"
 UDP_PORT = 8888
-MESSAGE_LED_ON  = "LED_ON"
-MESSAGE_LED_OFF = "LED_OFF"
+MESSAGE_RGB_FADE  = "RGB_FADE"
+MESSAGE_RGB_OFF = "RGB_OFF"
 
 # Send message to Arduino and get response
 def ConnectAndSendUdpMessage(_message):
@@ -35,10 +35,10 @@ def SendAndVerifyResponse(_message):
     return responseDictionary
 
 def TurnLedOn():
-    return SendAndVerifyResponse(MESSAGE_LED_ON)
+    return SendAndVerifyResponse(MESSAGE_RGB_FADE)
 
 def TurnLedOff():
-    return SendAndVerifyResponse(MESSAGE_LED_OFF)
+    return SendAndVerifyResponse(MESSAGE_RGB_OFF)
 
 
 if __name__ == "__main__":
