@@ -5,7 +5,7 @@ import select
 import socket
 import time
 
-UDP_IP = "192.168.1.20"
+UDP_IP = "172.16.230.118"
 UDP_PORT = 8888
 
 
